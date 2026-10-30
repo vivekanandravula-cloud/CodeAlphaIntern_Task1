@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}ShopEase | Everyday essentials{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy"><p class="eyebrow">THE EVERYDAY EDIT</p><h1>Good finds.<br><span>Better days.</span></h1><p>Discover thoughtful essentials for work, home, and everywhere in between.</p><a href="#products" class="btn btn-light">Explore products ↓</a></div>
+  <div class="hero-art" aria-hidden="true"><div class="hero-orbit"></div><div class="hero-card"><span>CURATED FOR YOU</span><strong>Small things.<br>Big difference.</strong><i>✦</i></div></div>
+</section>
+<section id="products" class="section-head"><div><p class="eyebrow">OUR COLLECTION</p><h2>Shop the latest</h2></div>
+  <form class="search-form" method="get" action="{% url 'home' %}"><label class="sr-only" for="search">Search products</label><input id="search" name="q" value="{{ query }}" placeholder="Search products..."><button type="submit" aria-label="Search">⌕</button></form>
+</section>
+{% if products %}
+<div class="product-grid">
+{% for product in products %}
+  <article class="product-card">
+    <a class="product-image" href="{% url 'product_detail' product.id %}">
+      {% if product.image_url %}<img src="{{ product.image_url }}" alt="{{ product.name }}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="image-fallback" style="display:none">✦<span>{{ product.category }}</span></div>{% else %}<div class="image-fallback">✦<span>{{ product.category }}</span></div>{% endif %}
+      <span class="image-tag">{{ product.category }}</span>
+    </a>
+    <div class="product-info"><a href="{% url 'product_detail' product.id %}" class="product-name">{{ product.name }}</a><p>{{ product.description|truncatechars:76 }}</p><div class="product-bottom"><strong>₹{{ product.price }}</strong><form method="post" action="{% url 'add_to_cart' product.id %}">{% csrf_token %}<input type="hidden" name="next" value="cart"><button class="add-btn" type="submit" {% if product.stock == 0 %}disabled{% endif %} aria-label="Add {{ product.name }} to cart">+</button></form></div></div>
+  </article>
+{% endfor %}
+</div>
+{% else %}<div class="empty-state"><h3>No products found</h3><p>Try a different search term.</p><a href="{% url 'home' %}" class="btn btn-primary">View all products</a></div>{% endif %}
+{% endblock %}

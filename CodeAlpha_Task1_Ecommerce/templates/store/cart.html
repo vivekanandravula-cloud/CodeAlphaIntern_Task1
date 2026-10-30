@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Your Cart | ShopEase{% endblock %}
+{% block content %}
+<div class="page-heading"><p class="eyebrow">YOUR BAG</p><h1>Shopping cart</h1><p>Review your items before checkout.</p></div>
+{% if items %}
+<div class="cart-layout"><div class="cart-items">
+{% for item in items %}<article class="cart-item">
+  <div class="cart-thumb">{% if item.product.image_url %}<img src="{{ item.product.image_url }}" alt="" onerror="this.style.display='none'">{% else %}✦{% endif %}</div>
+  <div class="cart-item-main"><a href="{% url 'product_detail' item.product.id %}" class="product-name">{{ item.product.name }}</a><small>₹{{ item.product.price }} each</small>
+    <div class="cart-actions"><form method="post" action="{% url 'update_cart' item.product.id %}" class="quantity-form">{% csrf_token %}<label for="qty-{{ item.product.id }}">Qty</label><input id="qty-{{ item.product.id }}" name="quantity" type="number" min="1" max="{{ item.product.stock }}" value="{{ item.quantity }}"><button type="submit" class="text-button">Update</button></form><form method="post" action="{% url 'remove_from_cart' item.product.id %}">{% csrf_token %}<button type="submit" class="text-button danger">Remove</button></form></div>
+  </div><strong class="line-total">₹{{ item.line_total }}</strong>
+</article>{% endfor %}
+</div><aside class="summary-card"><h2>Order summary</h2><div class="summary-row"><span>Subtotal</span><strong>₹{{ total }}</strong></div><div class="summary-row"><span>Delivery</span><span class="free-label">FREE</span></div><div class="summary-total"><span>Total</span><strong>₹{{ total }}</strong></div><a class="btn btn-primary full-width" href="{% url 'checkout' %}">Proceed to checkout</a><a class="continue-link" href="{% url 'home' %}">Continue shopping</a></aside></div>
+{% else %}<div class="empty-state"><div class="empty-icon">🛍</div><h2>Your cart is empty</h2><p>Looks like you haven't added anything yet.</p><a class="btn btn-primary" href="{% url 'home' %}">Start shopping</a></div>{% endif %}
+{% endblock %}

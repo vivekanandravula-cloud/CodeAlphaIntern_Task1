@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Login | ShopEase{% endblock %}
+{% block content %}
+<section class="form-card">
+  <p class="eyebrow">WELCOME BACK</p><h1>Login to your account</h1>
+  <form method="post">{% csrf_token %}
+    {% if form.non_field_errors %}<div class="field-error">{{ form.non_field_errors }}</div>{% endif %}
+    {% for field in form %}<div class="form-field"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.errors %}<small class="field-error">{{ field.errors|striptags }}</small>{% endif %}</div>{% endfor %}
+    <button class="btn btn-primary full-width" type="submit">Login</button>
+  </form>
+  <p class="form-foot">New here? <a href="{% url 'register' %}">Create an account</a></p>
+</section>
+{% endblock %}

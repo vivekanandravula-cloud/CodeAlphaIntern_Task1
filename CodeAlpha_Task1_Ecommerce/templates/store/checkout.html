@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Checkout | ShopEase{% endblock %}
+{% block content %}
+<div class="page-heading"><p class="eyebrow">ALMOST YOURS</p><h1>Checkout</h1><p>Enter your delivery details to place the demo order.</p></div>
+<div class="checkout-layout"><section class="checkout-card"><h2>Delivery details</h2><form method="post">{% csrf_token %}
+{% for field in form %}<div class="form-field"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.errors %}<small class="field-error">{{ field.errors|striptags }}</small>{% endif %}</div>{% endfor %}
+<button class="btn btn-primary full-width" type="submit">Place order · ₹{{ total }}</button></form></section>
+<aside class="summary-card"><h2>Your order</h2>{% for item in items %}<div class="summary-product"><span>{{ item.product.name }} <small>× {{ item.quantity }}</small></span><strong>₹{{ item.line_total }}</strong></div>{% endfor %}<div class="summary-total"><span>Total</span><strong>₹{{ total }}</strong></div><p class="secure-note">Demo checkout · no payment is collected.</p></aside></div>
+{% endblock %}
